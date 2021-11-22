@@ -1,0 +1,24 @@
+{
+  "name": "Rocket_Elevators_GraphQL_API",
+  "version": "1.0.0",
+  "description": "this is the repo for new moon team GraphQL API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lemath/Rocket_Elevators_GraphQL_API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lemath/Rocket_Elevators_GraphQL_API/issues"
+  },
+  "homepage": "https://github.com/Lemath/Rocket_Elevators_GraphQL_API#readme",
+  "dependencies": {
+    "apollo-server": "^2.25.3",
+    "graphql": "^14.7.0"
+  }
+}
