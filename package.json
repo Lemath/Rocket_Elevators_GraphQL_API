@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Lemath/Rocket_Elevators_GraphQL_API#readme",
   "dependencies": {
     "apollo-server": "^2.25.3",
-    "graphql": "^14.7.0"
+    "graphql": "^14.7.0",
+    "mysql2": "^2.3.3"
   }
 }
