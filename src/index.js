@@ -1,14 +1,26 @@
 const { ApolloServer } = require('apollo-server');
+const mysql = require('../services/mysql');
+const psql = require('../services/psql').psql;
+
+psql.manyOrNone(`SELECT "Email" FROM fact_contacts LIMIT 1`)
+.then(function (patate) {
+  console.log(patate)
+})
+
+mysql.query(`SELECT status FROM elevators`)
+.then(function(results) {
+  console.log(results);
+})
+
 
 
 const resolvers = {
   Query: {
-   
-  },
-  Mutation: {
-   
+    test: ()=> `patate`
   },
 };
+
+
 
 const fs = require('fs');
 const path = require('path');
