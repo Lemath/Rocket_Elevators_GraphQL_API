@@ -1,11 +1,229 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model active_storage_attachments {
+  id                   BigInt               @id @default(autoincrement())
+  name                 String               @db.VarChar(255)
+  record_type          String               @db.VarChar(255)
+  record_id            BigInt
+  blob_id              BigInt
+  created_at           DateTime             @db.DateTime(0)
+  active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onUpdate: Restrict, map: "fk_rails_c3b3935057")
+
+  @@unique([record_type, record_id, name, blob_id], map: "index_active_storage_attachments_uniqueness")
+  @@index([blob_id], map: "index_active_storage_attachments_on_blob_id")
+}
+
+model active_storage_blobs {
+  id                         BigInt                       @id @default(autoincrement())
+  key                        String                       @unique(map: "index_active_storage_blobs_on_key") @db.VarChar(255)
+  filename                   String                       @db.VarChar(255)
+  content_type               String?                      @db.VarChar(255)
+  metadata                   String?                      @db.Text
+  byte_size                  BigInt
+  checksum                   String                       @db.VarChar(255)
+  created_at                 DateTime                     @db.DateTime(0)
+  active_storage_attachments active_storage_attachments[]
+}
+
+model addresses {
+  id                  BigInt   @id @default(autoincrement())
+  type_of_address     String?  @db.VarChar(255)
+  status              String?  @db.VarChar(255)
+  entity              String?  @db.VarChar(255)
+  number_and_street   String?  @db.VarChar(255)
+  suite_or_appartment String?  @db.VarChar(255)
+  city                String?  @db.VarChar(255)
+  postal_code         String?  @db.VarChar(255)
+  country             String?  @db.VarChar(255)
+  notes               String?  @db.VarChar(255)
+  created_at          DateTime @db.DateTime(0)
+  updated_at          DateTime @db.DateTime(0)
+  building_id         Int?
+  customer_id         Int?
+
+  @@index([building_id], map: "index_addresses_on_building_id")
+  @@index([customer_id], map: "index_addresses_on_customer_id")
+}
+
+model ar_internal_metadata {
+  key        String   @id @db.VarChar(255)
+  value      String?  @db.VarChar(255)
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+}
+
+model batteries {
+  id                    BigInt    @id @default(autoincrement())
+  Type                  String?   @db.VarChar(255)
+  Status                String?   @db.VarChar(255)
+  Operation_Certificate String?   @db.VarChar(255)
+  Information           String?   @db.VarChar(255)
+  Notes                 String?   @db.VarChar(255)
+  Informations_Date     DateTime? @db.Timestamp(0)
+  created_at            DateTime  @db.DateTime(0)
+  updated_at            DateTime  @db.DateTime(0)
+  building_id           Int?
+  employee_id           Int?
+  Creation_Date         DateTime? @db.DateTime(0)
+  Last_Inspect          DateTime? @db.DateTime(0)
+
+  @@index([building_id], map: "index_batteries_on_building_id")
+  @@index([employee_id], map: "index_batteries_on_employee_id")
+}
+
+model building_details {
+  id                          BigInt   @id @default(autoincrement())
+  information_key             String?  @db.VarChar(255)
+  value                       String?  @db.VarChar(255)
+  created_at                  DateTime @db.DateTime(0)
+  updated_at                  DateTime @db.DateTime(0)
+  building_id                 Int?
+  number_of_floors            String?  @db.VarChar(255)
+  type                        String?  @db.VarChar(255)
+  department                  String?  @db.VarChar(255)
+  year_of_contruction         String?  @db.VarChar(255)
+  maximum_number_of_occupants String?  @db.VarChar(255)
+}
+
+model buildings {
+  id                           BigInt   @id @default(autoincrement())
+  name_administrator_building  String?  @db.VarChar(255)
+  email_administrator_building String?  @db.VarChar(255)
+  phone_administrator_building String?  @db.VarChar(255)
+  name_technical_building      String?  @db.VarChar(255)
+  email_technical_building     String?  @db.VarChar(255)
+  phone_technical_building     String?  @db.VarChar(255)
+  created_at                   DateTime @db.DateTime(0)
+  updated_at                   DateTime @db.DateTime(0)
+  customer_id                  Int?
+  address_id                   Int?
+}
+
+model columns {
+  id                      BigInt   @id @default(autoincrement())
+  type_of_building        String?  @db.VarChar(255)
+  number_of_floors_served Int?
+  status                  String?  @db.VarChar(255)
+  information             String?  @db.VarChar(255)
+  notes                   String?  @db.VarChar(255)
+  created_at              DateTime @db.DateTime(0)
+  updated_at              DateTime @db.DateTime(0)
+  battery_id              Int?
+
+  @@index([battery_id], map: "index_columns_on_battery_id")
+}
+
+model customers {
+  id                                BigInt   @id @default(autoincrement())
+  user_id                           Int?
+  company_name                      String?  @db.VarChar(255)
+  company_headquarter               String?  @db.VarChar(255)
+  company_contact                   String?  @db.VarChar(255)
+  company_email                     String?  @db.VarChar(255)
+  company_description               String?  @db.VarChar(255)
+  service_technical_authority_name  String?  @db.VarChar(255)
+  technical_authority_phone         String?  @db.VarChar(255)
+  service_technical_authority_email String?  @db.VarChar(255)
+  created_at                        DateTime @db.DateTime(0)
+  updated_at                        DateTime @db.DateTime(0)
+  address_id                        Int?
+  customer_creation_date            String?  @db.VarChar(255)
+}
+
+model elevators {
+  id                        BigInt    @id @default(autoincrement())
+  serial_number             Int?
+  model                     String?   @db.VarChar(255)
+  type_of_building          String?   @db.VarChar(255)
+  status                    String?   @db.VarChar(255)
+  date_of_commissioning     DateTime? @db.Date
+  date_of_last_inspection   DateTime? @db.Date
+  certificate_of_inspection String?   @db.VarChar(255)
+  information               String?   @db.VarChar(255)
+  notes                     String?   @db.VarChar(255)
+  created_at                DateTime  @db.DateTime(0)
+  updated_at                DateTime  @db.DateTime(0)
+  column_id                 Int?
+
+  @@index([column_id], map: "index_elevators_on_column_id")
+}
+
+model employees {
+  id         BigInt   @id @default(autoincrement())
+  first_name String?  @db.VarChar(255)
+  last_name  String?  @db.VarChar(255)
+  email      String?  @db.VarChar(255)
+  title      String?  @db.VarChar(255)
+  admin      Boolean?
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+}
+
+model leads {
+  id                  BigInt    @id @default(autoincrement())
+  full_name_contact   String?   @db.VarChar(255)
+  company_name        String?   @db.VarChar(255)
+  email               String?   @db.VarChar(255)
+  phone               String?   @db.VarChar(255)
+  project_name        String?   @db.VarChar(255)
+  project_description String?   @db.VarChar(255)
+  department          String?   @db.VarChar(255)
+  message             String?   @db.VarChar(255)
+  created_at          DateTime  @db.DateTime(0)
+  updated_at          DateTime  @db.DateTime(0)
+  file                Bytes?    @db.Blob
+  request_date        DateTime? @db.Timestamp(0)
+}
+
+model quotes {
+  id                      BigInt   @id @default(autoincrement())
+  amount_of_elevator      String?  @db.VarChar(255)
+  price_per_elevator      String?  @db.VarChar(255)
+  total_price_of_elevator String?  @db.VarChar(255)
+  installation            String?  @db.VarChar(255)
+  total_price             String?  @db.VarChar(255)
+  created_at              DateTime @db.DateTime(0)
+  updated_at              DateTime @db.DateTime(0)
+  residential             Boolean?
+  commercial              Boolean?
+  corporate               Boolean?
+  hybrid                  Boolean?
+  building_type           String?  @db.VarChar(255)
+  user_id                 Int?
+  company_name            String?  @db.VarChar(255)
+  company_email           String?  @db.VarChar(255)
+  full_name               String?  @db.VarChar(255)
+  phone                   String?  @db.VarChar(255)
+  department              String?  @db.VarChar(255)
+  project_name            String?  @db.VarChar(255)
+  project_description     String?  @db.VarChar(255)
+  message                 String?  @db.VarChar(255)
+  type_of_service         String?  @db.VarChar(255)
+
+  @@index([user_id], map: "index_quotes_on_user_id")
+}
+
+model schema_migrations {
+  version String @id @db.VarChar(255)
+}
+
+model users {
+  id                     BigInt    @id @default(autoincrement())
+  email                  String    @unique(map: "index_users_on_email") @default("") @db.VarChar(255)
+  encrypted_password     String    @default("") @db.VarChar(255)
+  reset_password_token   String?   @unique(map: "index_users_on_reset_password_token") @db.VarChar(255)
+  reset_password_sent_at DateTime? @db.DateTime(0)
+  remember_created_at    DateTime? @db.DateTime(0)
+  admin                  Boolean?  @default(false)
+  user_id                Int?
+  created_at             DateTime? @db.DateTime(0)
+  update_at              DateTime? @db.DateTime(0)
+  updated_at             DateTime? @db.DateTime(0)
 }

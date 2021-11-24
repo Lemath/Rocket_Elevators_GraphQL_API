@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Lemath/Rocket_Elevators_GraphQL_API#readme",
   "dependencies": {
+    "@prisma/client": "^3.5.0",
     "apollo-server": "^2.25.3",
     "graphql": "^14.7.0",
     "mysql2": "^2.3.3",

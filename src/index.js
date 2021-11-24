@@ -1,6 +1,8 @@
 const { ApolloServer } = require('apollo-server');
 const mysql = require('../services/mysql');
 const psql = require('../services/psql').psql;
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 psql.manyOrNone(`SELECT "Email" FROM fact_contacts LIMIT 1`)
 .then(function (patate) {
