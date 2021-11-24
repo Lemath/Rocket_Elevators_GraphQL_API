@@ -1,6 +1,21 @@
+type Intervention {
+  
+  start_time_and_date: String!,
+  end_time_and_date: String!,
+  
+}
+
+
+
+
+
+
 type Query {
   test: String!,   
+  intervention(id: ID!): Intervention! 
 
+  
+  
 }
 
 

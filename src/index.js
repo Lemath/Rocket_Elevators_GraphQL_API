@@ -4,10 +4,10 @@ const psql = require('../services/psql').psql;
 
 psql.manyOrNone(`SELECT "Email" FROM fact_contacts LIMIT 1`)
 .then(function (patate) {
-  console.log(patate)
+  console.log(patate[0]['Email'])
 })
 
-mysql.query(`SELECT status FROM elevators`)
+mysql.query(`SELECT status FROM elevators`, 'status')
 .then(function(results) {
   console.log(results);
 })
@@ -16,7 +16,13 @@ mysql.query(`SELECT status FROM elevators`)
 
 const resolvers = {
   Query: {
-    test: ()=> `patate`
+    test() {
+      const testQuery = `SELECT status FROM elevators`;
+      return mysql.query(testQuery, 'status')
+    }
+    intervention(id) {
+      const start = 
+    }
     
     
   },
