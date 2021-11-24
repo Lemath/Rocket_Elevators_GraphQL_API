@@ -17,6 +17,8 @@ mysql.query(`SELECT status FROM elevators`)
 const resolvers = {
   Query: {
     test: ()=> `patate`
+    
+    
   },
 };
 

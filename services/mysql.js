@@ -10,4 +10,4 @@ async function query(sql) {
 
 module.exports = {
   query
-}
+};
