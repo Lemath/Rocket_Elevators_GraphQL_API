@@ -8,7 +8,7 @@ const connConfig = {
   password: 'Codeboxx1!',
   database: 'SamaelTessier',
   port: 5432
-}
+};
 const pgp = pgPromise({}); // empty pgPromise instance
 const psql = pgp(connConfig); // get connection to your db instance
 

@@ -1,5 +1,43 @@
-type Query {
-  test: String!,   
+type Intervention {
+  id: ID!
+  start_time_and_date: String!
+  end_time_and_date: String
+  address: String!
+  
 }
 
+type Building {
+  id: ID!
+  interventions: [Intervention]!
+  customer: Customer!
+  building_details: Building_Details!
+}
 
+type Building_Details {
+  number_of_floors: String!
+  type: String!
+  department: String!
+  year_of_construction: String!
+  maximum_number_of_occupants: String!
+}
+
+type Customer {
+  id: ID!
+  company_name: String!
+  company_email: String!
+  company_contact: String!
+}
+
+type Employee {
+  id: ID!
+  interventions: [Intervention]!
+  buildings: [Building]!
+
+}
+
+type Query {
+  test: String!
+  intervention(id: ID!): Intervention!
+  building(id: ID!): Building!
+  employee(id: ID!): Employee!
+}
