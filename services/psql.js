@@ -1,12 +1,11 @@
 
 const pgPromise = require('pg-promise');
 
-const connStr = 'postgresql://codeboxx@codeboxx-postgresql.cq6zrczewpu2.us-east-1.rds.amazonaws.com:5432/SamaelTessier'; // add your psql details
 const connConfig = {
-  host: 'codeboxx-postgresql.cq6zrczewpu2.us-east-1.rds.amazonaws.com',
-  user: 'codeboxx',
-  password: 'Codeboxx1!',
-  database: 'SamaelTessier',
+  host: process.env.PSQL_HOST,
+  user: process.env.PSQL_USERNAME,
+  password: process.env.PSQL_PASSWORD,
+  database: process.env.PSQL_DATABASE,
   port: 5432
 };
 const pgp = pgPromise({}); // empty pgPromise instance

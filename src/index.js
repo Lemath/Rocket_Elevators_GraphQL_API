@@ -1,5 +1,5 @@
 const { ApolloServer } = require('apollo-server');
-const mysql = require('../services/mysql');
+
 const psql = require('../services/psql').psql;
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
