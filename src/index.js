@@ -97,6 +97,8 @@ const server = new ApolloServer({
     'utf8'
   ),
   resolvers,
+  introspection: true,
+  playground: true,
 });
 
 server
