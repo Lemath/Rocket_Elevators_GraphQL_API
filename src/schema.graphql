@@ -15,7 +15,7 @@ type Building {
 
 type Building_Details {
   number_of_floors: String!
-  type: String!
+  building_type: String!
   department: String!
   year_of_construction: String!
   maximum_number_of_occupants: String!
