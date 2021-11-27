@@ -57,7 +57,7 @@ const resolvers = {
           end_time_and_date: String(intervention.intervention_end_date_time),
           address: `address_string`
         });
-        console.log(`building id : ${intervention.building_id}`)
+        console.log(`building id : ${intervention.building_id}`);
         if (building_id_list.indexOf(intervention.building_id) === -1) {
           building_id_list.push(intervention.building_id);
         }
@@ -66,16 +66,16 @@ const resolvers = {
       console.log(`building ids : ` + building_id_list);
       const building_list = await Promise.all(building_id_list.map( async (id) => {
         const building = await prisma.buildings.findUnique({ where: { id: Number(id) } });
-        const building_details = await prisma.building_details.findMany({ where: { building_id: id } });
-        console.log(building_details);
+        const buildingDetails = await prisma.building_details.findMany({ where: { building_id: id } });
+        console.log(buildingDetails);
         return {
           id: Number(building.id), 
           building_details: {
-            number_of_floors: building_details.number_of_floors,
-            building_type: building_details.building_type,
-            department: building_details.department,
-            year_of_contruction: building_details.year_of_contruction,
-            maximum_number_of_occupants: building_details.maximum_number_of_occupants,
+            number_of_floors: buildingDetails.number_of_floors,
+            building_type: buildingDetails.building_type,
+            department: buildingDetails.department,
+            year_of_contruction: buildingDetails.year_of_contruction,
+            maximum_number_of_occupants: buildingDetails.maximum_number_of_occupants,
           }
         };
       }));
