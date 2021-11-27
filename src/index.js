@@ -72,7 +72,7 @@ const resolvers = {
           id: Number(building.id), 
           building_details: {
             number_of_floors: building_details.number_of_floors,
-            building_type: building_details.type,
+            building_type: building_details.building_type,
             department: building_details.department,
             year_of_contruction: building_details.year_of_contruction,
             maximum_number_of_occupants: building_details.maximum_number_of_occupants,
