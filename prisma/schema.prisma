@@ -86,10 +86,10 @@ model building_details {
   updated_at                  DateTime @db.DateTime(0)
   building_id                 Int?
   number_of_floors            String?  @db.VarChar(255)
-  building_type                        String?  @db.VarChar(255)
   department                  String?  @db.VarChar(255)
   year_of_contruction         String?  @db.VarChar(255)
   maximum_number_of_occupants String?  @db.VarChar(255)
+  building_type               String?  @db.VarChar(255)
 }
 
 model buildings {
@@ -196,16 +196,10 @@ model quotes {
   corporate               Boolean?
   hybrid                  Boolean?
   building_type           String?  @db.VarChar(255)
+  string                  String?  @db.VarChar(255)
   user_id                 Int?
   company_name            String?  @db.VarChar(255)
   company_email           String?  @db.VarChar(255)
-  full_name               String?  @db.VarChar(255)
-  phone                   String?  @db.VarChar(255)
-  department              String?  @db.VarChar(255)
-  project_name            String?  @db.VarChar(255)
-  project_description     String?  @db.VarChar(255)
-  message                 String?  @db.VarChar(255)
-  type_of_service         String?  @db.VarChar(255)
 
   @@index([user_id], map: "index_quotes_on_user_id")
 }
@@ -223,7 +217,4 @@ model users {
   remember_created_at    DateTime? @db.DateTime(0)
   admin                  Boolean?  @default(false)
   user_id                Int?
-  created_at             DateTime? @db.DateTime(0)
-  update_at              DateTime? @db.DateTime(0)
-  updated_at             DateTime? @db.DateTime(0)
 }
