@@ -86,7 +86,7 @@ model building_details {
   updated_at                  DateTime @db.DateTime(0)
   building_id                 Int?
   number_of_floors            String?  @db.VarChar(255)
-  type                        String?  @db.VarChar(255)
+  building_type                        String?  @db.VarChar(255)
   department                  String?  @db.VarChar(255)
   year_of_contruction         String?  @db.VarChar(255)
   maximum_number_of_occupants String?  @db.VarChar(255)
