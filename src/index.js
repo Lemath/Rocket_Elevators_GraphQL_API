@@ -12,7 +12,7 @@ const resolvers = {
     },
     intervention: async (_, args) => {
       const { id } = args;
-      const psql_response = await psql.manyOrNone(`SELECT * FROM factIntervention WHERE id = ${id}`);
+      const psql_response = await psql.manyOrNone(`SELECT * FROM fact_interventions WHERE id = ${id}`);
       const building_id = psql_response[0].building_id;
       const building = await prisma.buildings.findUnique({ where: { id: building_id } });
       const address = await prisma.addresses.findUnique({ where:{ id: building.address_id } });
@@ -31,7 +31,7 @@ const resolvers = {
       const building = await prisma.buildings.findUnique({ where: { id: Number(id) } });
       const customer = await prisma.customers.findUnique({ select: {id: true, company_name: true, company_email: true, company_contact: true}, where: { id: building.customer_id } });
       customer.id = Number(customer.id);
-      const interventions = await psql.manyOrNone(`SELECT * FROM factIntervention WHERE building_id = ${id}`);
+      const interventions = await psql.manyOrNone(`SELECT * FROM fact_interventions WHERE building_id = ${id}`);
       const address = await prisma.addresses.findUnique({ where:{ id: building.address_id } });
       const address_string = `${address.number_and_street}, ${address.city}, ${address.country}, ${address.postal_code}`;
       const intervention_list = [];
@@ -47,7 +47,7 @@ const resolvers = {
     },
     employee: async (_, args) => {
       const { id } = args;
-      const interventions = await psql.manyOrNone(`SELECT * FROM factIntervention WHERE employee_id = ${id}`);
+      const interventions = await psql.manyOrNone(`SELECT * FROM fact_interventions WHERE employee_id = ${id}`);
       const intervention_list = [];
       const building_id_list = [];
       interventions.forEach( (intervention) => {
