@@ -22,8 +22,6 @@ const resolvers = {
 
     building: async (_, args) => {
       const { id } = args;
-      const building = await prisma.buildings.findUnique({ where: { id: Number(id) } });
-      
       const interventions = await psql.manyOrNone(`SELECT * FROM fact_interventions WHERE building_id = ${id}`);
       const intervention_list = [];
       interventions.forEach( (intervention) => {
@@ -50,7 +48,6 @@ const resolvers = {
           end_time_and_date: String(intervention.intervention_end_date_time),
         };
       }));
-      console.log(`building_id_list : ${building_id_list}`);
       const building_list = await Promise.all(building_id_list.map( async (id) => {
         const building = await prisma.buildings.findUnique({ where: { id: Number(id) } });
           return { id: Number(building.id) };
@@ -72,9 +69,7 @@ const resolvers = {
   Building: {
 
     building_details: async (parent) => {
-      console.log(parent)
       const buildingDetails = await prisma.building_details.findMany({ where: { building_id: parent.id } });
-      console.log(buildingDetails[0].building_type);
       return {
         number_of_floors: buildingDetails[0].number_of_floors,
         building_type: buildingDetails[0].building_type,
