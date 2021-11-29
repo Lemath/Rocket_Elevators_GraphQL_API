@@ -20,6 +20,7 @@
   "dependencies": {
     "@prisma/client": "^3.5.0",
     "apollo-server": "^2.25.3",
+    "dotenv": "^10.0.0",
     "graphql": "^14.7.0",
     "mysql2": "^2.3.3",
     "pg-promise": "^10.11.1"
