@@ -2,7 +2,7 @@ type Intervention {
   id: ID!
   start_time_and_date: String!
   end_time_and_date: String
-  address: String!
+  address: Address!
   
 }
 
@@ -32,12 +32,17 @@ type Employee {
   id: ID!
   interventions: [Intervention]!
   buildings: [Building]!
-
 }
 
 type Query {
-  test: String!
   intervention(id: ID!): Intervention!
   building(id: ID!): Building!
   employee(id: ID!): Employee!
+}
+
+type Address {
+  number_and_street: String!
+  city: String!
+  country: String!
+  postal_code: String!
 }

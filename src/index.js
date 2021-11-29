@@ -5,86 +5,90 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const resolvers = {
+  
   Query: {
-    test() {
-      const testQuery = `SELECT status FROM elevators`;
-      return mysql.query(testQuery, 'status');
-    },
+
     intervention: async (_, args) => {
       const { id } = args;
       const psql_response = await psql.manyOrNone(`SELECT * FROM fact_interventions WHERE id = ${id}`);
-      const building_id = psql_response[0].building_id;
-      const building = await prisma.buildings.findUnique({ where: { id: building_id } });
-      const address = await prisma.addresses.findUnique({ where:{ id: building.address_id } });
-      const address_string = `${address.number_and_street}, ${address.city}, ${address.country}, ${address.postal_code}`;
       const start_time_and_date = String(psql_response[0].intervention_start_date_time);
       const end_time_and_date = String(psql_response[0].intervention_end_date_time);
       return {
         id: id, 
         start_time_and_date: start_time_and_date, 
-        end_time_and_date: end_time_and_date, 
-        address: address_string
+        end_time_and_date: end_time_and_date,
       };
-    }, 
+    },
+
     building: async (_, args) => {
       const { id } = args;
       const building = await prisma.buildings.findUnique({ where: { id: Number(id) } });
-      const customer = await prisma.customers.findUnique({ select: {id: true, company_name: true, company_email: true, company_contact: true}, where: { id: building.customer_id } });
-      customer.id = Number(customer.id);
+      
       const interventions = await psql.manyOrNone(`SELECT * FROM fact_interventions WHERE building_id = ${id}`);
-      const address = await prisma.addresses.findUnique({ where:{ id: building.address_id } });
-      const address_string = `${address.number_and_street}, ${address.city}, ${address.country}, ${address.postal_code}`;
       const intervention_list = [];
       interventions.forEach( (intervention) => {
         intervention_list.push({
           id: intervention.id,
           start_time_and_date: String(intervention.intervention_start_date_time),
           end_time_and_date: String(intervention.intervention_end_date_time),
-          address: address_string
         });
       });
-      return {id: Number(id), customer: customer, interventions: intervention_list};
+      return {id: Number(id), interventions: intervention_list};
     },
+
     employee: async (_, args) => {
       const { id } = args;
       const interventions = await psql.manyOrNone(`SELECT * FROM fact_interventions WHERE employee_id = ${id}`);
-      const intervention_list = [];
       const building_id_list = [];
-      interventions.forEach( (intervention) => {
-        intervention_list.push({
-          id: intervention.id,
-          start_time_and_date: String(intervention.intervention_start_date_time),
-          end_time_and_date: String(intervention.intervention_end_date_time),
-          address: `address_string`
-        });
-        console.log(`building id : ${intervention.building_id}`);
+      const intervention_list = await Promise.all(interventions.map( async (intervention) => {
         if (building_id_list.indexOf(intervention.building_id) === -1) {
           building_id_list.push(intervention.building_id);
         }
-      });
-      console.log(building_id_list);
-      console.log(`building ids : ` + building_id_list);
-      const building_list = await Promise.all(building_id_list.map( async (id) => {
-        const building = await prisma.buildings.findUnique({ where: { id: Number(id) } });
-        const buildingDetails = await prisma.building_details.findMany({ where: { building_id: id } });
-        console.log(buildingDetails);
         return {
-          id: Number(building.id), 
-          building_details: {
-            number_of_floors: buildingDetails.number_of_floors,
-            building_type: buildingDetails.building_type,
-            department: buildingDetails.department,
-            year_of_contruction: buildingDetails.year_of_contruction,
-            maximum_number_of_occupants: buildingDetails.maximum_number_of_occupants,
-          }
+          id: intervention.id,
+          start_time_and_date: String(intervention.intervention_start_date_time),
+          end_time_and_date: String(intervention.intervention_end_date_time),
         };
       }));
-      console.log(intervention_list);
-      console.log(building_list);
-      building_list.forEach((building) => {
-
-      });
+      console.log(`building_id_list : ${building_id_list}`);
+      const building_list = await Promise.all(building_id_list.map( async (id) => {
+        const building = await prisma.buildings.findUnique({ where: { id: Number(id) } });
+          return { id: Number(building.id) };
+      }));
       return {id: id, interventions: intervention_list, buildings: building_list};
+    },
+  },
+
+  Intervention: {
+
+    address: async (parent) => {
+      const intervention = await psql.one(`SELECT * FROM fact_interventions WHERE id = ${parent.id}`);
+      const building = await prisma.buildings.findUnique({ where: { id: Number(intervention.building_id)} });
+      const address = await prisma.addresses.findUnique({ where:{ id: Number(building.address_id) } });
+      return {number_and_street: address.number_and_street, city: address.city, country: address.country, postal_code: address.postal_code}; 
+    },
+  },
+
+  Building: {
+
+    building_details: async (parent) => {
+      console.log(parent)
+      const buildingDetails = await prisma.building_details.findMany({ where: { building_id: parent.id } });
+      console.log(buildingDetails[0].building_type);
+      return {
+        number_of_floors: buildingDetails[0].number_of_floors,
+        building_type: buildingDetails[0].building_type,
+        department: buildingDetails[0].department,
+        year_of_construction: buildingDetails[0].year_of_contruction,
+        maximum_number_of_occupants: buildingDetails[0].maximum_number_of_occupants,
+      };
+    },
+
+    customer: async (parent) => {
+      const building = await prisma.buildings.findUnique({ where: { id: Number(parent.id) } });
+      const customer = await prisma.customers.findUnique({ select: {id: true, company_name: true, company_email: true, company_contact: true}, where: { id: building.customer_id } });
+      customer.id = Number(customer.id);
+      return customer;
     },
   },
 };
