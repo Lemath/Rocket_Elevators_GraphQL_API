@@ -10,7 +10,12 @@ query GetIntervention{
     id
     start_time_and_date
     end_time_and_date
-    address
+    address {
+      number_and_street
+      city
+      country
+      postal_code
+    }
   }
 }
 
